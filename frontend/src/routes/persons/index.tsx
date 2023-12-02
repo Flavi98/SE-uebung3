@@ -11,6 +11,7 @@ export default component$(() => {
 
     const nav = useNavigate();
 
+    //Daten von DB laden
     const loadData = $(() => {
         fetch('http://localhost:8000/events')
             .then(response => {
@@ -37,6 +38,7 @@ export default component$(() => {
         loadData();
     });
 
+    //Funktion für anmelden einer Veranstaltung
     const registerEvent = $((id: string, event: string) => {
         const apiUrl = "http://localhost:8000/addevents";
         fetch(apiUrl, {
@@ -65,6 +67,7 @@ export default component$(() => {
             });
     });
 
+    //Funktion für Abmeldung einer Veranstaltung
     const unregisterEvent = $((id: string, event: string) => {
         const apiUrl = "http://localhost:8000/deleteuser";
         fetch(apiUrl, {

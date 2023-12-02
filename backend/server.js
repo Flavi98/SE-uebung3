@@ -42,6 +42,7 @@ app.get('/events', (req, res) => {
     })
 });
 
+//Schauen ob es einen User mit Password gibt in der DB und dann wird ein Token erstellt
 app.post('/login', (req, res) => {
   const eventData = req.body;
   console.log("Received eventData:", eventData.username, eventData.password);
@@ -61,6 +62,7 @@ app.post('/login', (req, res) => {
     })
 })
 
+//alle Daten von Users
 app.get('/persons', (req, res) => {
   pool.getConnection()
     .then(conn => {
@@ -104,6 +106,7 @@ app.post('/addevents', (req, res) => {
     });
 });
 
+//neues Event erstellen
 app.post('/addNewEvent', (req, res) => {
   const eventData = req.body;
   console.log("Received eventData:", eventData.event);

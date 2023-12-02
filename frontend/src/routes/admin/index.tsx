@@ -12,6 +12,7 @@ export default component$(() => {
     const selectedEvent = useSignal<string | undefined>('');
     const updateEventName = useSignal('');
 
+    //Funktion für Laden der Daten aus der Datenbank
     const loadData = $(() => {
         fetch('http://localhost:8000/events')
             .then(response => {
@@ -28,6 +29,7 @@ export default component$(() => {
             });
     })
 
+    //Schauen welcher User angemeldet ist mit der gespeicherten Session Storage
     useVisibleTask$(async () => {
         username.value = sessionStorage && sessionStorage.getItem("username");
         isAdmin.value = sessionStorage && JSON.parse(sessionStorage.getItem("isAdmin") || '0');
@@ -41,6 +43,7 @@ export default component$(() => {
         loadData();
     });
 
+    //Löschen eines Events
     const deleteEvent = $((eventId: string) => {
         fetch(`http://localhost:8000/deleteevent/${eventId}`, {
             method: 'DELETE',
@@ -77,6 +80,7 @@ export default component$(() => {
         updateOpen.value = false;
     })
 
+    //Erstellen eines Events
     const createEvent = $(() => {
         const apiUrl = "http://localhost:8000/addNewEvent";
         fetch(apiUrl, {
@@ -110,6 +114,7 @@ export default component$(() => {
         selectedEvent.value = item;
     })
 
+    //Name eines Events ändern
     const updateEvent = $(() => {
         const apiUrl = "http://localhost:8000/updateEvent";
         fetch(apiUrl, {
