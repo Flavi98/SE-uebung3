@@ -25,6 +25,38 @@ const pool = mariadb.createPool({
   database: 'guestdb'
 });
 
+const swaggerUi = require('swagger-ui-express');
+const swaggerJsdoc = require('swagger-jsdoc');
+
+const options = {
+  definition: {
+    openapi: '3.0.0',
+    info: {
+      title: 'Your API',
+      version: '1.0.0',
+    },
+  },
+  apis: ['server.js'], // Adjust the path or pattern based on your project structure
+};
+
+const specs = swaggerJsdoc(options);
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
+
+/**
+ * @swagger
+ * /customers:
+ *  get:
+ *    description: Use to request all customers
+ *    responses:
+ *      '200':
+ *        description: A successful response
+ */
+app.get("/customers", (req, res) => {
+  console.log("request");
+  res.status(200).send("Customer result")
+})
+
 //Daten von der DB holen und zu localhost:8000/events fetchen
 app.get('/events', (req, res) => {
   pool.getConnection()
