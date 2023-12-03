@@ -59,7 +59,17 @@ app.get("/customers", (req, res) => {
 })
 
 //Daten von der DB holen und zu localhost:8000/events fetchen
+/**
+ * @swagger
+ * /events:
+ *  get:
+ *    description: Use to request all events
+ *    responses:
+ *      '200':
+ *        description: A successful response
+ */
 app.get('/events', (req, res) => {
+  const data = ('');
   pool.getConnection()
     .then(conn => {
       conn.query("SELECT * FROM veranstaltungen")
@@ -73,6 +83,7 @@ app.get('/events', (req, res) => {
       console.log(err);
       conn.end();
     })
+    res.status(200).send(res.json(rows));
 });
 
 //Schauen ob es einen User mit Password gibt in der DB und dann wird ein Token erstellt
