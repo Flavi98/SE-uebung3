@@ -21,7 +21,7 @@ const mariadb = require('mariadb');
 const pool = mariadb.createPool({
   host: '127.0.0.1',
   user: 'root',
-  password: 'root',
+  password: 'admin',
   database: 'guestdb'
 });
 
@@ -33,7 +33,7 @@ const options = {
   definition: {
     openapi: '3.0.0',
     info: {
-      title: 'Your API',
+      title: 'UE 3 API Dokumentation',
       version: '1.0.0',
     },
   },
@@ -44,26 +44,12 @@ const specs = swaggerJsdoc(options);
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
-/**
- * @swagger
- * /customers:
- *  get:
- *    description: Use to request all customers
- *    responses:
- *      '200':
- *        description: A successful response
- */
-app.get("/customers", (req, res) => {
-  console.log("request");
-  res.status(200).send("Customer result")
-})
-
 //Daten von der DB holen und zu localhost:8000/events fetchen
 /**
  * @swagger
  * /events:
  *  get:
- *    description: Use to request all events
+ *    description: Alle Events abfragen
  *    responses:
  *      '200':
  *        description: A successful response
@@ -82,11 +68,20 @@ app.get('/events', (req, res) => {
     .catch(err => {
       console.log(err);
       conn.end();
+      res.status(200).send(res.json(rows));
     })
-    res.status(200).send(res.json(rows));
 });
 
 //Schauen ob es einen User mit Password gibt in der DB und dann wird ein Token erstellt
+/**
+ * @swagger
+ * /login:
+ *  post:
+ *    description: User und Passwort überprüfen
+ *    responses:
+ *      '200':
+ *        description: A successful response
+ */
 app.post('/login', (req, res) => {
   const eventData = req.body;
   console.log("Received eventData:", eventData.username, eventData.password);
@@ -106,6 +101,15 @@ app.post('/login', (req, res) => {
     })
 })
 
+/**
+ * @swagger
+ * /persons:
+ *  get:
+ *    description: Alle Personsn abfragen
+ *    responses:
+ *      '200':
+ *        description: A successful response
+ */
 //alle Daten von Users
 app.get('/persons', (req, res) => {
   pool.getConnection()
@@ -123,6 +127,15 @@ app.get('/persons', (req, res) => {
     })
 });
 
+/**
+ * @swagger
+ * /addevents:
+ *  post:
+ *    description: User zu Event hinzufügen 
+ *    responses:
+ *      '200':
+ *        description: A successful response
+ */
 //Funktion für das Hinzufügen von einem User in einer Veranstaltung in der DB mit den Daten von Persons.js die über localhost:8000/addevents kommen
 app.post('/addevents', (req, res) => {
   const eventData = req.body;
@@ -150,6 +163,15 @@ app.post('/addevents', (req, res) => {
     });
 });
 
+/**
+ * @swagger
+ * /addNewEvent:
+ *  post:
+ *    description: neues Event erstellen 
+ *    responses:
+ *      '200':
+ *        description: A successful response
+ */
 //neues Event erstellen
 app.post('/addNewEvent', (req, res) => {
   const eventData = req.body;
@@ -180,7 +202,15 @@ app.post('/addNewEvent', (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   });
 });
-
+/**
+ * @swagger
+ * /updateEvent:
+ *  post:
+ *    description: Titel eines Events updaten 
+ *    responses:
+ *      '200':
+ *        description: A successful response
+ */
 //Funktion zum Updaten von Namen eines Events
 app.post('/updateEvent', (req, res) => {
   const eventData = req.body;
@@ -212,6 +242,15 @@ app.post('/updateEvent', (req, res) => {
   });
 });
 
+/**
+ * @swagger
+ * /deleteuser:
+ *  put:
+ *    description: User aus Veranstaltung löschen 
+ *    responses:
+ *      '200':
+ *        description: A successful response
+ */
 //Funktion für das Löschen von einem User in einer Veranstaltung in der DB mit den Daten von Persons.js die über localhost:8000/deleteuser kommen
 app.put('/deleteuser', (req, res) => {
   const eventData = req.body;
@@ -244,6 +283,15 @@ app.put('/deleteuser', (req, res) => {
     });
 });
 
+/**
+ * @swagger
+ * //deleteevent/:eventId:
+ *  delete:
+ *    description: Löschen eines Events 
+ *    responses:
+ *      '200':
+ *        description: A successful response
+ */
 //Funktion für das Löschen von einem Event in der DB mit den Daten von Admin.js die über localhost:8000/deleteevent mit der Variable eventId kommen
 app.delete('/deleteevent/:eventId', (req, res) => {
   const eventId = req.params.eventId;
