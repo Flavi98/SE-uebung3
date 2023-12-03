@@ -25,6 +25,7 @@ const pool = mariadb.createPool({
   database: 'guestdb'
 });
 
+//swaggerUI
 const swaggerUi = require('swagger-ui-express');
 const swaggerJsdoc = require('swagger-jsdoc');
 
